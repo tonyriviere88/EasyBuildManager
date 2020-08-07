@@ -13,8 +13,14 @@ namespace EasyBuildManager.Model
         public string ProjectName => solutionContext.ProjectName;
         public bool ShouldBuild
         {
-            get { return solutionContext.ShouldBuild; }
-            set { solutionContext.ShouldBuild = value; }
+            get
+            {
+                return solutionContext.ShouldBuild;
+            }
+            set
+            {
+                solutionContext.ShouldBuild = value;
+            }
         }
 
         private readonly EnvDTE.SolutionContext solutionContext;
@@ -49,16 +55,34 @@ namespace EasyBuildManager.Model
 
     class Project : PropertyChangedBase
     {
-        public EnvDTE.Project NativeProject { get; private set; }
-        public string Name { get; private set; }
-        public string FullName { get; private set; }
-        public string FilePath { get; private set; }
+        public EnvDTE.Project NativeProject
+        {
+            get; private set;
+        }
+        public string Name
+        {
+            get; private set;
+        }
+        public string FullName
+        {
+            get; private set;
+        }
+        public string FilePath
+        {
+            get; private set;
+        }
         public HashSet<Project> Dependencies { get; private set; } = new HashSet<Project>();
         public HashSet<Project> Referecing { get; private set; } = new HashSet<Project>();
-        public Solution Solution { get; set; }
+        public Solution Solution
+        {
+            get; set;
+        }
         public bool ShouldBuild
         {
-            get { return ActiveConfiguration.ShouldBuild; }
+            get
+            {
+                return ActiveConfiguration.ShouldBuild;
+            }
             set
             {
                 if (ActiveConfiguration.ShouldBuild == value)
@@ -79,7 +103,10 @@ namespace EasyBuildManager.Model
             }
         }
 
-        public ProjectConfiguration ActiveConfiguration { get; private set; }
+        public ProjectConfiguration ActiveConfiguration
+        {
+            get; private set;
+        }
 
         public Project(EnvDTE.Project project)
         {
@@ -129,13 +156,28 @@ namespace EasyBuildManager.Model
         }
     }
 
-    class Solution : PropertyChangedBase, IDisposable, IVsUpdateSolutionEvents
+    class Solution : PropertyChangedBase, IDisposable, IVsUpdateSolutionEvents3
     {
-        public EnvDTE.Solution NativeSolution { get; private set; }
-        public string Name { get; set; }
-        public string FilePath { get; set; }
-        public IList<Project> Projects { get; set; }
-        public SolutionConfiguration ActiveSolutionConfiguration { get; private set; }
+        public EnvDTE.Solution NativeSolution
+        {
+            get; private set;
+        }
+        public string Name
+        {
+            get; set;
+        }
+        public string FilePath
+        {
+            get; set;
+        }
+        public IList<Project> Projects
+        {
+            get; set;
+        }
+        public SolutionConfiguration ActiveSolutionConfiguration
+        {
+            get; private set;
+        }
         public bool IsReady
         {
             get
@@ -143,9 +185,49 @@ namespace EasyBuildManager.Model
                 return NativeSolution.IsOpen && NativeSolution.SolutionBuild.BuildState != EnvDTE.vsBuildState.vsBuildStateInProgress;
             }
         }
+        public bool? ShouldBuildAll
+        {
+            get
+            {
+                bool hasChecked = false;
+                bool hasUnchecked = false;
+
+                foreach (var project in Projects)
+                {
+                    bool shouldBuild = project.ShouldBuild;
+
+                    if (shouldBuild)
+                    {
+                        if (hasUnchecked)
+                            return null;
+
+                        hasChecked = true;
+                    }
+                    else
+                    {
+                        if(hasChecked)
+                            return null;
+
+                        hasUnchecked = true;
+                    }
+                }
+
+                return hasChecked;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                foreach (var project in Projects)
+                    project.ShouldBuild = value.Value;
+
+                OnPropertyChanged();
+            }
+        }
 
         private readonly EnvDTE.SolutionEvents solutionEvents;
-        private readonly IVsSolutionBuildManager sbm;
+        private readonly IVsSolutionBuildManager3 sbm;
         private readonly uint updateSolutionEventsCookie;
 
         public Solution(EnvDTE.Solution nativeSolution)
@@ -163,21 +245,26 @@ namespace EasyBuildManager.Model
             this.solutionEvents.ProjectRemoved += p => ReloadProjects();
             this.solutionEvents.ProjectRenamed += (p, n) => ReloadProjects();
 
-            sbm = ServiceProvider.GlobalProvider.GetService(typeof(SVsSolutionBuildManager)) as IVsSolutionBuildManager;
+            sbm = ServiceProvider.GlobalProvider.GetService(typeof(SVsSolutionBuildManager)) as IVsSolutionBuildManager3;
             if (sbm != null)
-                sbm.AdviseUpdateSolutionEvents(this, out updateSolutionEventsCookie);
+                sbm.AdviseUpdateSolutionEvents3(this, out updateSolutionEventsCookie);
         }
 
         public void Dispose()
         {
             if (sbm != null)
-                sbm.UnadviseUpdateSolutionEvents(updateSolutionEventsCookie);
+                sbm.UnadviseUpdateSolutionEvents3(updateSolutionEventsCookie);
         }
 
         public void ReloadProjects()
         {
             Projects = EnvDTEWrapper.GetProjects(this);
             UpdateCurrentConfig();
+        }
+
+        public void UpdateCheckState()
+        {
+            OnPropertyChanged(nameof(ShouldBuildAll));
         }
 
         public void UpdateCurrentConfig()
@@ -190,26 +277,14 @@ namespace EasyBuildManager.Model
             }
         }
 
-        public int OnActiveProjectCfgChange(IVsHierarchy pIVsHierarchy)
+        public int OnBeforeActiveSolutionCfgChange(IVsCfg pOldActiveSlnCfg, IVsCfg pNewActiveSlnCfg)
         {
-            UpdateCurrentConfig();
             return VSConstants.S_OK;
         }
 
-        public int UpdateSolution_Begin(ref int pfCancelUpdate)
+        public int OnAfterActiveSolutionCfgChange(IVsCfg pOldActiveSlnCfg, IVsCfg pNewActiveSlnCfg)
         {
-            return VSConstants.S_OK;
-        }
-        public int UpdateSolution_Done(int fSucceeded, int fModified, int fCancelCommand)
-        {
-            return VSConstants.S_OK;
-        }
-        public int UpdateSolution_StartUpdate(ref int pfCancelUpdate)
-        {
-            return VSConstants.S_OK;
-        }
-        public int UpdateSolution_Cancel()
-        {
+            UpdateCurrentConfig();
             return VSConstants.S_OK;
         }
     }

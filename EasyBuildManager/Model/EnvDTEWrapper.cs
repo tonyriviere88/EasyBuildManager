@@ -11,6 +11,8 @@ namespace EasyBuildManager.Model
         private static EnvDTE.DTE dte;
         private static EnvDTE.SolutionEvents solutionEvents;
 
+        public delegate void Callback();
+
         public static void Initialize(EasyBuildManagerPackage package, EnvDTE.DTE dte)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
@@ -24,16 +26,16 @@ namespace EasyBuildManager.Model
             return dte.Solution != null && dte.Solution.IsOpen;
         }
 
-        public static void RegisterOnSolutionOpened(EnvDTE._dispSolutionEvents_OpenedEventHandler iCallback)
+        public static void RegisterOnSolutionOpened(Callback iCallback)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-            solutionEvents.Opened += iCallback;
+            solutionEvents.Opened += () => iCallback();
         }
 
-        public static void RegisterOnSolutionClosed(EnvDTE._dispSolutionEvents_AfterClosingEventHandler iCallback)
+        public static void RegisterOnSolutionClosed(Callback iCallback)
         {
             Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
-            solutionEvents.AfterClosing += iCallback;
+            solutionEvents.AfterClosing += () => iCallback();
         }
 
         public static Solution GetCurrentSolution()
@@ -142,7 +144,8 @@ namespace EasyBuildManager.Model
                 }
             }
             catch (Exception)
-            { }
+            {
+            }
         }
 
         private static void NavigateProject(EnvDTE.Project nativeProject, List<EnvDTE.Project> nativeProjects)

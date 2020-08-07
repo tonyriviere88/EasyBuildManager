@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:ui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-             xmlns:ebm="clr-namespace:EasyBuildManager.Model"
+             xmlns:ebmm="clr-namespace:EasyBuildManager.Model"
+             xmlns:ebmv="clr-namespace:EasyBuildManager.View"
              Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
              mc:Ignorable="d"
@@ -13,7 +14,7 @@
              Name="MyToolWindow">
 
     <UserControl.Resources>
-        <ebm:IsGreaterThanZero x:Key="isGreaterThanZero"/>
+        <ebmm:IsGreaterThanZero x:Key="isGreaterThanZero"/>
 
         <Style TargetType="Button">
             <Setter Property="Width" Value="30" />
@@ -136,6 +137,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <WrapPanel Grid.Row="0" VerticalAlignment="Center" Background="{DynamicResource {x:Static ui:EnvironmentColors.CommandBarToolBarBorderBrushKey}}">
@@ -144,12 +146,24 @@
             <Button Content="{StaticResource GraphIcon}" ToolTip="Create the relationship diagram between projects." Command="{Binding DgmlCommand}" />
             <Button Content="{StaticResource RepairIcon}" ToolTip="Repair the references for a project based on the library it import." Command="{Binding RepairCommand}" />
         </WrapPanel>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1" Padding="5,5" >
+        <ebmv:MyCheckBox  IsChecked="{Binding Solution.ShouldBuildAll}" IsThreeState="True" Content="All" FontStyle="Italic" Grid.Row="1" Margin="5,5">
+            <CheckBox.Style>
+                <Style TargetType="{x:Type CheckBox}">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static ui:EnvironmentColors.ToolboxContentTextBrushKey}}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Solution.ShouldBuildAll}" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static ui:EnvironmentColors.ToolboxDisabledContentTextBrushKey}}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </CheckBox.Style>
+        </ebmv:MyCheckBox>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="2" Padding="5,5" >
             <ItemsControl ItemsSource="{Binding Solution.Projects}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding ShouldBuild}" Content="{Binding Name}" VerticalAlignment="Center">
+                            <CheckBox IsChecked="{Binding ShouldBuild}" Content="{Binding Name}" Click="CheckBox_Click" VerticalAlignment="Center">
                                 <CheckBox.Style>
                                     <Style TargetType="{x:Type CheckBox}">
                                         <Setter Property="Foreground" Value="{DynamicResource {x:Static ui:EnvironmentColors.ToolboxContentTextBrushKey}}"/>

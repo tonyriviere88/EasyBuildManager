@@ -1,6 +1,7 @@
 ﻿namespace EasyBuildManager.View
 {
     using EasyBuildManager.Model;
+    using System.Windows;
     using System.Windows.Controls;
 
     /// <summary>
@@ -18,6 +19,11 @@
             this.InitializeComponent();
 
             this.DataContext = model;
+        }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            model.UpdateCheckState();
         }
     }
 }

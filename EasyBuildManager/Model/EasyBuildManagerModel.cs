@@ -99,6 +99,11 @@ namespace EasyBuildManager.Model
             return Solution != null && Solution.IsReady;
         }
 
+        public void UpdateCheckState()
+        {
+            Solution.UpdateCheckState();
+        }
+
         public void CleanUnbuiltProjects()
         {
             if (!IsSolutionAvailable())
@@ -156,5 +161,7 @@ namespace EasyBuildManager.Model
         private void OnSolutionOpened() => Reload();
 
         private void OnSolutionClosed() => ClearData();
+
+        private void OnSolutionChanged() => Reload();
     }
 }

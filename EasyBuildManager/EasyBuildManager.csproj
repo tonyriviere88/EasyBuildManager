@@ -67,6 +67,7 @@
     <Compile Include="View\EasyBuildManagerWindowControl.xaml.cs">
       <DependentUpon>EasyBuildManagerWindowControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\MyCheckBox.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
