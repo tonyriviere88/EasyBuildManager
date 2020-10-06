@@ -51,6 +51,7 @@ namespace EasyBuildManager.Model
 
         public static void GenerateDgml(Solution solution)
         {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             var projects = solution.Projects.Select(p => new ProjectGraphInfo(p)).ToArray();
 
             try

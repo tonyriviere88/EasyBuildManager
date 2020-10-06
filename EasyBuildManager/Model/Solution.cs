@@ -10,15 +10,25 @@ namespace EasyBuildManager.Model
 {
     class ProjectConfiguration
     {
-        public string ProjectName => solutionContext.ProjectName;
+        public string ProjectName
+        {
+            get
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+                return solutionContext.ProjectName;
+            }
+        }
+
         public bool ShouldBuild
         {
             get
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
                 return solutionContext.ShouldBuild;
             }
             set
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
                 solutionContext.ShouldBuild = value;
             }
         }
@@ -37,6 +47,7 @@ namespace EasyBuildManager.Model
 
         public SolutionConfiguration(EnvDTE.SolutionConfiguration solutionConfiguration)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             configurationPerProject = new Dictionary<string, ProjectConfiguration>();
             var solutionContexts = solutionConfiguration.SolutionContexts;
 
@@ -81,10 +92,12 @@ namespace EasyBuildManager.Model
         {
             get
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
                 return ActiveConfiguration.ShouldBuild;
             }
             set
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
                 if (ActiveConfiguration.ShouldBuild == value)
                     return;
 
@@ -99,6 +112,7 @@ namespace EasyBuildManager.Model
         {
             get
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
                 return Referecing.Where(p => p.ShouldBuild).Count();
             }
         }
@@ -110,6 +124,7 @@ namespace EasyBuildManager.Model
 
         public Project(EnvDTE.Project project)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             this.NativeProject = project;
             this.Name = project.Name;
             this.FullName = project.UniqueName;
@@ -118,6 +133,7 @@ namespace EasyBuildManager.Model
 
         public void Clean()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (NativeProject.Object is VCProject vcProject)
             {
                 vcProject.ActiveConfiguration.Clean();
@@ -127,6 +143,7 @@ namespace EasyBuildManager.Model
 
         public void UpdateDependencies()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (ShouldBuild)
             {
                 foreach (var proj in Dependencies)
@@ -182,6 +199,7 @@ namespace EasyBuildManager.Model
         {
             get
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
                 return NativeSolution.IsOpen && NativeSolution.SolutionBuild.BuildState != EnvDTE.vsBuildState.vsBuildStateInProgress;
             }
         }
@@ -189,6 +207,7 @@ namespace EasyBuildManager.Model
         {
             get
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
                 bool hasChecked = false;
                 bool hasUnchecked = false;
 
@@ -205,7 +224,7 @@ namespace EasyBuildManager.Model
                     }
                     else
                     {
-                        if(hasChecked)
+                        if (hasChecked)
                             return null;
 
                         hasUnchecked = true;
@@ -216,6 +235,7 @@ namespace EasyBuildManager.Model
             }
             set
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
                 if (value == null)
                     return;
 
@@ -232,6 +252,7 @@ namespace EasyBuildManager.Model
 
         public Solution(EnvDTE.Solution nativeSolution)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             this.NativeSolution = nativeSolution;
             if (!IsReady)
                 return;
@@ -252,23 +273,28 @@ namespace EasyBuildManager.Model
 
         public void Dispose()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (sbm != null)
                 sbm.UnadviseUpdateSolutionEvents3(updateSolutionEventsCookie);
         }
 
         public void ReloadProjects()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             Projects = EnvDTEWrapper.GetProjects(this);
             UpdateCurrentConfig();
         }
 
         public void UpdateCheckState()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             OnPropertyChanged(nameof(ShouldBuildAll));
+            NativeSolution.Saved = false;
         }
 
         public void UpdateCurrentConfig()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             ActiveSolutionConfiguration = new SolutionConfiguration(NativeSolution.SolutionBuild.ActiveConfiguration);
 
             foreach (var project in Projects)

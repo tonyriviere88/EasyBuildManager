@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.VCProjectEngine;
+﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.VCProjectEngine;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +21,7 @@ namespace EasyBuildManager.Model
 
         public static void RepairReferences(Solution solution)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var projectInfos = solution.Projects
                 .Where(p => p.NativeProject.Object is VCProject)
                 .Select(p =>

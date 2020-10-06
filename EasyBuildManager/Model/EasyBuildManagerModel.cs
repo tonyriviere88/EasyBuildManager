@@ -1,8 +1,5 @@
 ﻿using Microsoft.VisualStudio.Shell;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -63,105 +60,118 @@ namespace EasyBuildManager.Model
 
         public EasyBuildManagerModel(EasyBuildManagerPackage package)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             this.package = package;
-            EnvDTEWrapper.RegisterOnSolutionOpened(this.OnSolutionOpened);
-            EnvDTEWrapper.RegisterOnSolutionClosed(this.OnSolutionClosed);
-            RefreshSolutionCommand = new RelayCommand(() => Reload());
+            EnvDTEWrapper.RegisterOnSolutionOpened(OnSolutionOpened);
+            EnvDTEWrapper.RegisterOnSolutionClosed(OnSolutionClosed);
+            RefreshSolutionCommand = new RelayCommand(action: () => Reload());
             CleanCommand = new RelayCommand(CleanUnbuiltProjects);
             DgmlCommand = new RelayCommand(GenerateDgml);
             RepairCommand = new RelayCommand(RepairReferences);
 
             if (EnvDTEWrapper.IsSolutionOpened())
+            {
                 Reload();
+            }
         }
 
         public void Reload()
         {
-            Logger.ProfileFunction(() => _Reload(), $"Reload solution {EnvDTEWrapper.GetCurrentSolutionName()}");
+
+            ThreadHelper.ThrowIfNotOnUIThread();
+            Logger.ProfileFunction(function: () => _Reload(), name: $"Reload solution {EnvDTEWrapper.GetCurrentSolutionName()}");
         }
 
         private void _Reload()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             Solution = EnvDTEWrapper.GetCurrentSolution();
         }
 
         public void ClearData()
         {
-            if (!IsSolutionAvailable())
-                return;
-
+            ThreadHelper.ThrowIfNotOnUIThread();
             Solution.Dispose();
             Solution = null;
         }
 
         public bool IsSolutionAvailable()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             return Solution != null && Solution.IsReady;
         }
 
         public void UpdateCheckState()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             Solution.UpdateCheckState();
         }
 
         public void CleanUnbuiltProjects()
         {
-            if (!IsSolutionAvailable())
-                return;
-
-            // Clean command performs on 'ShouldBuild == true' projects, so invert it locally
-            foreach (var project in Solution.Projects)
+            ThreadHelper.ThrowIfNotOnUIThread();
+            if (IsSolutionAvailable())
             {
-                project.ActiveConfiguration.ShouldBuild = !project.ActiveConfiguration.ShouldBuild;
-            }
-
-            try
-            {
-                Solution.NativeSolution.SolutionBuild.Clean(true);
-            }
-            finally
-            {
+                // Clean command performs on 'ShouldBuild == true' projects, so invert it locally
                 foreach (var project in Solution.Projects)
                 {
                     project.ActiveConfiguration.ShouldBuild = !project.ActiveConfiguration.ShouldBuild;
                 }
 
-                Solution.NativeSolution.SaveAs(Solution.FilePath);
+                try
+                {
+                    Solution.NativeSolution.SolutionBuild.Clean(true);
+                }
+                finally
+                {
+                    foreach (var project in Solution.Projects)
+                    {
+                        project.ActiveConfiguration.ShouldBuild = !project.ActiveConfiguration.ShouldBuild;
+                    }
+
+                    Solution.NativeSolution.SaveAs(Solution.FilePath);
+                }
             }
         }
 
         public void GenerateDgml()
         {
-            if (!IsSolutionAvailable())
-                return;
-
-            Logger.ProfileFunction(() => DgmlGenerator.GenerateDgml(solution), "GenerateDgml");
+            ThreadHelper.ThrowIfNotOnUIThread();
+            if (IsSolutionAvailable())
+                Logger.ProfileFunction(() => DgmlGenerator.GenerateDgml(solution), "GenerateDgml");
         }
 
         public void RepairReferences()
         {
-            if (!IsSolutionAvailable())
-                return;
+            ThreadHelper.ThrowIfNotOnUIThread();
+            if (IsSolutionAvailable())
+            {
+                int ret = VsShellUtilities.ShowMessageBox(
+                   package,
+                   "This will try to repair the project's references based on the library (.lib) it imports.\n" +
+                   "This can take time and freeze the IDE for several minutes if the solution has 100+ projects.",
+                   "Repair references",
+                   OLEMSGICON.OLEMSGICON_WARNING,
+                   OLEMSGBUTTON.OLEMSGBUTTON_OK | OLEMSGBUTTON.OLEMSGBUTTON_OKCANCEL,
+                   OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_SECOND);
 
-            int ret = VsShellUtilities.ShowMessageBox(
-                package,
-                "This will try to repair the project's references based on the library (.lib) it imports.\n" +
-                "This can take time and freeze the IDE for several minutes if the solution has 100+ projects.",
-                "Repair references",
-                OLEMSGICON.OLEMSGICON_WARNING,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK | OLEMSGBUTTON.OLEMSGBUTTON_OKCANCEL,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_SECOND);
+                if (ret != 1) // != OK
+                    return;
 
-            if (ret != 1) // != OK
-                return;
-
-            Logger.ProfileFunction(() => ReferenceRepairer.RepairReferences(solution), "RepairReferences");
+                Logger.ProfileFunction(() => ReferenceRepairer.RepairReferences(solution), "RepairReferences");
+            }
         }
 
-        private void OnSolutionOpened() => Reload();
+        private void OnSolutionOpened()
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            Reload();
+        }
 
-        private void OnSolutionClosed() => ClearData();
-
-        private void OnSolutionChanged() => Reload();
+        private void OnSolutionClosed()
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            ClearData();
+        }
     }
 }

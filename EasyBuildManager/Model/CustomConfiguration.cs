@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.VisualStudio.Shell;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -31,11 +32,12 @@ namespace EasyBuildManager.Model
 
         public CustomConfigurationManager(Solution solution)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             this.solution = solution;
 
             var conf = new CustomConfiguration();
 
-            foreach (var project in this.solution.Projects.Where(p => p.ShouldBuild))
+            foreach (Project project in this.solution.Projects.Where(p => p.ShouldBuild))
             {
                 conf.Projects.Add(project.FullName);
             }

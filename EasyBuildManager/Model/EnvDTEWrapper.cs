@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.VCProjectEngine;
+﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.VCProjectEngine;
 using System;
 using System.Collections.Generic;
 using VSLangProj;
@@ -15,7 +16,7 @@ namespace EasyBuildManager.Model
 
         public static void Initialize(EasyBuildManagerPackage package, EnvDTE.DTE dte)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
             EnvDTEWrapper.package = package;
             EnvDTEWrapper.dte = dte;
             solutionEvents = dte.Events.SolutionEvents;
@@ -23,33 +24,37 @@ namespace EasyBuildManager.Model
 
         public static bool IsSolutionOpened()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             return dte.Solution != null && dte.Solution.IsOpen;
         }
 
         public static void RegisterOnSolutionOpened(Callback iCallback)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            
             solutionEvents.Opened += () => iCallback();
         }
 
         public static void RegisterOnSolutionClosed(Callback iCallback)
         {
-            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            
             solutionEvents.AfterClosing += () => iCallback();
         }
 
         public static Solution GetCurrentSolution()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             return new Solution(dte.Solution);
         }
 
         public static string GetCurrentSolutionName()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             return dte.Solution?.FileName;
         }
 
         public static IList<Project> GetProjects(Solution solution)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var projects = new List<Project>();
             var projectsPerName = new Dictionary<string, Project>();
 
@@ -73,6 +78,7 @@ namespace EasyBuildManager.Model
 
         public static string GetTargetFilename(Project project)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var vcproj = project.NativeProject.Object as VCProject;
             var cfgs = vcproj.Configurations as IVCCollection;
             var cfg = cfgs.Item(1) as VCConfiguration2;
@@ -81,6 +87,7 @@ namespace EasyBuildManager.Model
 
         public static string GetAdditionalDependencies(Project project)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var vcproj = project.NativeProject.Object as VCProject;
             var cfgs = vcproj.Configurations as IVCCollection;
             var cfg = cfgs.Item(1) as VCConfiguration2;
@@ -90,6 +97,7 @@ namespace EasyBuildManager.Model
 
         public static string GetImportLibrary(Project project)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var vcproj = project.NativeProject.Object as VCProject;
             var cfgs = vcproj.Configurations as IVCCollection;
             var cfg = cfgs.Item(1) as VCConfiguration2;
@@ -99,6 +107,7 @@ namespace EasyBuildManager.Model
 
         private static void RetrieveDependencies(IDictionary<string, Project> allProjects)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             try
             {
                 foreach (var curProject in allProjects.Values)
@@ -150,6 +159,7 @@ namespace EasyBuildManager.Model
 
         private static void NavigateProject(EnvDTE.Project nativeProject, List<EnvDTE.Project> nativeProjects)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (nativeProject.Kind == EnvDTE80.ProjectKinds.vsProjectKindSolutionFolder)
                 NavigateProjectItems(nativeProject.ProjectItems, nativeProjects);
             else if (nativeProject.Object != null)
@@ -158,6 +168,7 @@ namespace EasyBuildManager.Model
 
         private static void NavigateProjectItems(EnvDTE.ProjectItems nativeProjectItems, List<EnvDTE.Project> nativeProjects)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (nativeProjectItems == null)
                 return;
             foreach (EnvDTE.ProjectItem nativeProjectItem in nativeProjectItems)
@@ -169,6 +180,7 @@ namespace EasyBuildManager.Model
 
         private static void ShowSolutionBuildConfigurations()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             EnvDTE80.Solution2 solution2;
             EnvDTE80.SolutionBuild2 solutionBuild2;

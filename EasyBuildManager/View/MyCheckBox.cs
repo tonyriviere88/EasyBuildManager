@@ -6,7 +6,7 @@ namespace EasyBuildManager.View
     {
         protected override void OnToggle()
         {
-            IsChecked = !IsChecked.HasValue || !IsChecked.Value;
+            IsChecked = IsChecked.HasValue && !IsChecked.Value;
         }
     }
 }

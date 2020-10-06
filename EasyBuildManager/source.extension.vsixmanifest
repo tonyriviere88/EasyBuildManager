@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="EasyBuildManager.e289253c-e9fc-4ae9-b817-8cf1857c7dbf" Version="0.3" Language="en-US" Publisher="Tony Riviere" />
+        <Identity Id="EasyBuildManager.e289253c-e9fc-4ae9-b817-8cf1857c7dbf" Version="0.4" Language="en-US" Publisher="Tony Riviere" />
         <DisplayName>EasyBuildManager</DisplayName>
         <Description xml:space="preserve">EasyBuildManager allow you to quickly select which projects you want to build in the solution.</Description>
     </Metadata>

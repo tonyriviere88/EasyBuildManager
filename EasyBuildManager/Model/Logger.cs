@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Diagnostics;
 
@@ -24,6 +24,7 @@ namespace EasyBuildManager.Model
 
         public static void LogInfo(string info)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (!info.EndsWith("\n"))
                 info += '\n';
             CustomPane.OutputString(info);
