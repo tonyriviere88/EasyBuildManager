@@ -22,7 +22,7 @@ namespace EasyBuildManager.View
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
-        public static readonly Guid CommandSet = new Guid("ff29c27e-5aa0-41c5-a8e3-cebda0fa017e");
+        public static readonly Guid CommandSet = new Guid("391d0356-a1f2-46bc-b4cf-07e75ecf79b8");
 
         /// <summary>
         /// VS Package that provides this command, not null.

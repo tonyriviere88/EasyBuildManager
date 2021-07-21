@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31512.422
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyBuildManagerVSIX2019", "EasyBuildManagerVSIX2019\EasyBuildManagerVSIX2019.csproj", "{013DF188-1168-44B0-97A4-AE8A11DECDA7}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "EasyBuildManager", "EasyBuildManager\EasyBuildManager.shproj", "{1FF95E6B-6984-4E47-9840-4BAE59C94015}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyBuildManagerVSIX2022", "EasyBuildManagerVSIX2022\EasyBuildManagerVSIX2022.csproj", "{0552DD02-8F7C-47D7-B7A9-9724C0574D8A}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		EasyBuildManager\EasyBuildManager.projitems*{013df188-1168-44b0-97a4-ae8a11decda7}*SharedItemsImports = 4
+		EasyBuildManager\EasyBuildManager.projitems*{0552dd02-8f7c-47d7-b7a9-9724c0574d8a}*SharedItemsImports = 4
+		EasyBuildManager\EasyBuildManager.projitems*{1ff95e6b-6984-4e47-9840-4bae59c94015}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{013DF188-1168-44B0-97A4-AE8A11DECDA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{013DF188-1168-44B0-97A4-AE8A11DECDA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{013DF188-1168-44B0-97A4-AE8A11DECDA7}.Debug|x86.ActiveCfg = Debug|x86
+		{013DF188-1168-44B0-97A4-AE8A11DECDA7}.Debug|x86.Build.0 = Debug|x86
+		{013DF188-1168-44B0-97A4-AE8A11DECDA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{013DF188-1168-44B0-97A4-AE8A11DECDA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{013DF188-1168-44B0-97A4-AE8A11DECDA7}.Release|x86.ActiveCfg = Release|x86
+		{013DF188-1168-44B0-97A4-AE8A11DECDA7}.Release|x86.Build.0 = Release|x86
+		{0552DD02-8F7C-47D7-B7A9-9724C0574D8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0552DD02-8F7C-47D7-B7A9-9724C0574D8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0552DD02-8F7C-47D7-B7A9-9724C0574D8A}.Debug|x86.ActiveCfg = Debug|x86
+		{0552DD02-8F7C-47D7-B7A9-9724C0574D8A}.Debug|x86.Build.0 = Debug|x86
+		{0552DD02-8F7C-47D7-B7A9-9724C0574D8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0552DD02-8F7C-47D7-B7A9-9724C0574D8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0552DD02-8F7C-47D7-B7A9-9724C0574D8A}.Release|x86.ActiveCfg = Release|x86
+		{0552DD02-8F7C-47D7-B7A9-9724C0574D8A}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4794F442-C3B6-45A4-8EE7-AEBC133ED65A}
+	EndGlobalSection
+EndGlobal

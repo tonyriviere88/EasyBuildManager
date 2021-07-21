@@ -14,7 +14,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EasyBuildManager</RootNamespace>
-    <AssemblyName>EasyBuildManager</AssemblyName>
+    <AssemblyName>EasyBuildManager-VS2019</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <UseCodebase>true</UseCodebase>
@@ -32,7 +32,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;Dev16</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -40,34 +40,17 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;Dev16</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Utility\Annotations.cs" />
-    <Compile Include="Model\CustomConfiguration.cs" />
-    <Compile Include="Model\DgmlGenerator.cs" />
-    <Compile Include="Model\EasyBuildManagerModel.cs" />
-    <Compile Include="Model\EnvDTEWrapper.cs" />
-    <Compile Include="Model\Logger.cs" />
-    <Compile Include="Model\ReferenceRepairer.cs" />
-    <Compile Include="Model\Solution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EasyBuildManagerPackage.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utility\PropertyChangedBase.cs" />
-    <Compile Include="Utility\RelayCommand.cs" />
-    <Compile Include="View\EasyBuildManagerWindow.cs" />
-    <Compile Include="View\EasyBuildManagerWindowCommand.cs" />
-    <Compile Include="View\EasyBuildManagerWindowControl.xaml.cs">
-      <DependentUpon>EasyBuildManagerWindowControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\MyCheckBox.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
@@ -76,12 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualStudio.VCProject, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.VCProjectEngine, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -95,25 +72,19 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.0.202" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.4.1057" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.10.31321.278" ExcludeAssets="runtime">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.VCProjectEngine">
+      <Version>16.10.31320.204</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.10.1055">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="OpenSoftware.DgmlBuilder">
       <Version>1.13.0</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <VSCTCompile Include="EasyBuildManagerPackage.vsct">
-      <ResourceName>Menus.ctmenu</ResourceName>
-    </VSCTCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="View\EasyBuildManagerWindowControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\EasyBuildManagerWindowCommand.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -121,6 +92,13 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <VSCTCompile Include="..\SharedPackage\EasyBuildManagerPackage.vsct">
+      <Link>EasyBuildManagerPackage.vsct</Link>
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+  </ItemGroup>
+  <Import Project="..\EasyBuildManager\EasyBuildManager.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

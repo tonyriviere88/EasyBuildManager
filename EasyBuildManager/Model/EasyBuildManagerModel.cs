@@ -56,9 +56,9 @@ namespace EasyBuildManager.Model
             }
         }
 
-        private readonly EasyBuildManagerPackage package;
+        private readonly IServiceProvider package;
 
-        public EasyBuildManagerModel(EasyBuildManagerPackage package)
+        public EasyBuildManagerModel(IServiceProvider package)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
             this.package = package;
@@ -140,7 +140,6 @@ namespace EasyBuildManager.Model
             if (IsSolutionAvailable())
                 Logger.ProfileFunction(() => DgmlGenerator.GenerateDgml(solution), "GenerateDgml");
         }
-
         public void RepairReferences()
         {
             ThreadHelper.ThrowIfNotOnUIThread();

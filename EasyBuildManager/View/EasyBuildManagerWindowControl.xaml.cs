@@ -1,6 +1,7 @@
 ﻿namespace EasyBuildManager.View
 {
     using EasyBuildManager.Model;
+    using System;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -9,15 +10,16 @@
     /// </summary>
     public partial class EasyBuildManagerWindowControl : UserControl
     {
-        private readonly EasyBuildManagerModel model = new EasyBuildManagerModel(EasyBuildManagerPackage.Instance);
+        private readonly EasyBuildManagerModel model;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EasyBuildManagerWindowControl"/> class.
         /// </summary>
-        public EasyBuildManagerWindowControl()
+        public EasyBuildManagerWindowControl(IServiceProvider serviceProvider)
         {
             this.InitializeComponent();
 
+            model = new EasyBuildManagerModel(serviceProvider);
             this.DataContext = model;
         }
 

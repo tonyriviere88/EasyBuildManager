@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Shell;
+using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Microsoft.VisualStudio.Shell;
 using Task = System.Threading.Tasks.Task;
 
 namespace EasyBuildManager
@@ -34,7 +34,7 @@ namespace EasyBuildManager
         /// <summary>
         /// EasyBuildManagerPackage GUID string.
         /// </summary>
-        public const string PackageGuidString = "5f722bac-fc28-4a98-b9fc-dc20a1a47e4d";
+        public const string PackageGuidString = "fbe0934e-581f-440b-961d-b3fb85bbb722";
 
         #region Package Members
 
@@ -56,8 +56,8 @@ namespace EasyBuildManager
             // Query service asynchronously from the UI thread
             var dte = await GetServiceAsync(typeof(EnvDTE.DTE)) as EnvDTE.DTE;
 
-            Model.EnvDTEWrapper.Initialize(this, dte);
-            Model.Logger.Initialize();
+            EasyBuildManager.Model.EnvDTEWrapper.Initialize(this, dte);
+            EasyBuildManager.Model.Logger.Initialize();
 
             await EasyBuildManager.View.EasyBuildManagerWindowCommand.InitializeAsync(this);
         }

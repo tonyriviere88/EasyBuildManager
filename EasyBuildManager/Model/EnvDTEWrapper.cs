@@ -8,13 +8,13 @@ namespace EasyBuildManager.Model
 {
     static class EnvDTEWrapper
     {
-        private static EasyBuildManagerPackage package;
+        private static IServiceProvider package;
         private static EnvDTE.DTE dte;
         private static EnvDTE.SolutionEvents solutionEvents;
 
         public delegate void Callback();
 
-        public static void Initialize(EasyBuildManagerPackage package, EnvDTE.DTE dte)
+        public static void Initialize(IServiceProvider package, EnvDTE.DTE dte)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
             EnvDTEWrapper.package = package;

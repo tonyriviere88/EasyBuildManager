@@ -208,6 +208,8 @@ namespace EasyBuildManager.Model
             get
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
+                if (Projects == null)
+                    return false;
                 bool hasChecked = false;
                 bool hasUnchecked = false;
 
@@ -236,7 +238,7 @@ namespace EasyBuildManager.Model
             set
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
-                if (value == null)
+                if (value == null || Projects == null)
                     return;
 
                 foreach (var project in Projects)

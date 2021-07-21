@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>1ff95e6b-6984-4e47-9840-4bae59c94015</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>EasyBuildManager</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)EasyBuildManagerPackage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\CustomConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\DgmlGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\EasyBuildManagerModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\EnvDTEWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Logger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\ReferenceRepairer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Solution.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Annotations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\PropertyChangedBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\RelayCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)View\EasyBuildManagerWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)View\EasyBuildManagerWindowCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)View\EasyBuildManagerWindowControl.xaml.cs">
+      <DependentUpon>EasyBuildManagerWindowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)View\MyCheckBox.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)View\EasyBuildManagerWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+</Project>
